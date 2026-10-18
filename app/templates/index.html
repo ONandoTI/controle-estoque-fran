@@ -1,0 +1,161 @@
+
+{% extends "base.html" %}
+
+{% block title %}Painel de Estoque — Loja da Fran{% endblock %}
+
+{% block content %}
+<section class="resumo">
+    <div class="cartao">
+        <span>Produtos cadastrados</span>
+        <strong>{{ produtos|length }}</strong>
+    </div>
+
+    <div class="cartao">
+        <span>Itens em estoque</span>
+        <strong>{{ produtos|sum(attribute='quantidade_atual') }}</strong>
+    </div>
+
+    <div class="cartao">
+        <span>Produtos com estoque baixo</span>
+        <strong>{{ total_estoque_baixo }}</strong>
+    </div>
+</section>
+
+<section class="painel">
+    <h2>Cadastrar produto</h2>
+
+    <form action="{{ url_for('cadastrar') }}" method="post" class="formulario">
+        <div class="campo">
+            <label for="nome">Nome do produto *</label>
+            <input id="nome" name="nome" type="text" required maxlength="120">
+        </div>
+
+        <div class="campo">
+            <label for="descricao">Descrição</label>
+            <input id="descricao" name="descricao" type="text" maxlength="250">
+        </div>
+
+        <div class="campo">
+            <label for="quantidade">Quantidade inicial *</label>
+            <input id="quantidade" name="quantidade" type="number" min="0" step="1" value="0" required>
+        </div>
+
+        <div class="campo">
+            <label for="estoque_minimo">Estoque mínimo</label>
+            <input id="estoque_minimo" name="estoque_minimo" type="number" min="0" step="1" value="0" required>
+        </div>
+
+        <button type="submit">Cadastrar produto</button>
+    </form>
+</section>
+
+<section class="painel">
+    <h2>Registrar movimentação</h2>
+
+    <form action="{{ url_for('movimentar') }}" method="post" class="formulario">
+        <div class="campo">
+            <label for="produto_id">Produto *</label>
+            <select id="produto_id" name="produto_id" required>
+                <option value="">Selecione um produto</option>
+                {% for produto in produtos %}
+                    <option value="{{ produto.id }}">{{ produto.nome }} — saldo: {{ produto.quantidade_atual }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="tipo">Operação *</label>
+            <select id="tipo" name="tipo" required>
+                <option value="ENTRADA">Entrada</option>
+                <option value="SAIDA">Saída</option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="quantidade_mov">Quantidade *</label>
+            <input id="quantidade_mov" name="quantidade" type="number" min="1" step="1" required>
+        </div>
+
+        <div class="campo">
+            <label for="observacao">Observação</label>
+            <input id="observacao" name="observacao" type="text" maxlength="250">
+        </div>
+
+        <button type="submit">Registrar movimentação</button>
+    </form>
+</section>
+
+<section class="painel">
+    <h2>Estoque atual</h2>
+
+    {% if produtos %}
+        <div class="tabela-responsiva">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>
+                        <th>Estoque mínimo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                        <tr>
+                            <td>{{ produto.nome }}</td>
+                            <td>{{ produto.descricao or "—" }}</td>
+                            <td>{{ produto.quantidade_atual }}</td>
+                            <td>{{ produto.estoque_minimo }}</td>
+                            <td>
+                                {% if produto.quantidade_atual == 0 %}
+                                    <span class="status sem-estoque">Sem estoque</span>
+                                {% elif produto.quantidade_atual <= produto.estoque_minimo %}
+                                    <span class="status baixo">Estoque baixo</span>
+                                {% else %}
+                                    <span class="status normal">Disponível</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Nenhum produto cadastrado. Utilize o formulário acima para começar.</p>
+    {% endif %}
+</section>
+
+<section class="painel">
+    <h2>Últimas movimentações</h2>
+
+    {% if movimentacoes %}
+        <div class="tabela-responsiva">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data e hora</th>
+                        <th>Produto</th>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Observação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in movimentacoes[:10] %}
+                        <tr>
+                            <td>{{ mov.data_hora }}</td>
+                            <td>{{ mov.produto_nome }}</td>
+                            <td>{{ mov.tipo }}</td>
+                            <td>{{ mov.quantidade }}</td>
+                            <td>{{ mov.observacao or "—" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>As movimentações aparecerão aqui depois do primeiro cadastro ou operação.</p>
+    {% endif %}
+</section>
+{% endblock %}
