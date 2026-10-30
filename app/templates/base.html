@@ -10,8 +10,18 @@
 <body>
     <header class="topo">
         <div class="container">
-            <h1>Loja da Fran</h1>
-            <p>Sistema de Controle de Estoque</p>
+            <div class="cabecalho-conteudo">
+                <div>
+                    <h1>Loja da Fran</h1>
+                    <p>Sistema de Controle de Estoque</p>
+                </div>
+
+                <button type="button" id="alternar-tema"
+                        class="botao-tema"
+                        aria-label="Alternar tema de cores">
+                    Alterar tema
+                </button>
+            </div>
         </div>
     </header>
 
@@ -32,5 +42,25 @@
     <footer>
         <p>Sistema de Controle de Estoque da Loja da Fran</p>
     </footer>
+
+    <script>
+        const botaoTema = document.getElementById("alternar-tema");
+
+        function aplicarTema(tema) {
+            document.body.classList.toggle("tema-rosa", tema === "rosa");
+            localStorage.setItem("tema-loja-fran", tema);
+        }
+
+        const temaSalvo = localStorage.getItem("tema-loja-fran") || "azul";
+        aplicarTema(temaSalvo);
+
+        botaoTema.addEventListener("click", function () {
+            const temaAtual = document.body.classList.contains("tema-rosa")
+                ? "rosa"
+                : "azul";
+
+            aplicarTema(temaAtual === "azul" ? "rosa" : "azul");
+        });
+    </script>
 </body>
 </html>

@@ -167,3 +167,11 @@ def test_formulario_rejeita_saida_sem_estoque_suficiente(cliente):
     assert "Estoque insuficiente para essa saída.".encode() in resposta.data
     assert obter_saldo(produto_id) == 2
     assert contar_movimentacoes(produto_id) == 1
+
+
+def test_pagina_inicial_exibe_botao_de_alterar_tema(cliente):
+    resposta = cliente.get("/")
+
+    assert resposta.status_code == 200
+    assert b"Alterar tema" in resposta.data
+    assert b"tema-loja-fran" in resposta.data
