@@ -1,14 +1,43 @@
 
+:root {
+    --fundo: #f4f6f9;
+    --texto: #253247;
+    --cabecalho: #243b64;
+    --texto-secundario: #e1e9f6;
+    --botao: #2857a4;
+    --botao-hover: #1d427f;
+    --cartao: #ffffff;
+    --borda: #aeb9c8;
+    --tabela-cabecalho: #f7f9fc;
+    --borda-tabela: #e1e6ed;
+    --foco: #9fc5ff;
+}
+
+body.tema-rosa {
+    --fundo: #fff4f8;
+    --texto: #49313d;
+    --cabecalho: #a94f78;
+    --texto-secundario: #ffe5ef;
+    --botao: #bd5d88;
+    --botao-hover: #974468;
+    --cartao: #ffffff;
+    --borda: #d8aabe;
+    --tabela-cabecalho: #fff0f5;
+    --borda-tabela: #f0d6e1;
+    --foco: #e9a9c5;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: #f4f6f9;
-    color: #253247;
+    background: var(--fundo);
+    color: var(--texto);
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
+    transition: background 0.2s, color 0.2s;
 }
 
 .container {
@@ -17,10 +46,18 @@ body {
 }
 
 .topo {
-    background: #243b64;
+    background: var(--cabecalho);
     color: white;
     padding: 25px 0;
     margin-bottom: 28px;
+}
+
+.cabecalho-conteudo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 .topo h1 {
@@ -30,7 +67,15 @@ body {
 
 .topo p {
     margin: 4px 0 0;
-    color: #e1e9f6;
+    color: var(--texto-secundario);
+}
+
+.cartao,
+.painel {
+    background: var(--cartao);
+    border-radius: 10px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(25, 42, 70, 0.08);
 }
 
 .resumo {
@@ -38,14 +83,6 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
     margin-bottom: 24px;
-}
-
-.cartao,
-.painel {
-    background: white;
-    border-radius: 10px;
-    padding: 22px;
-    box-shadow: 0 2px 8px rgba(25, 42, 70, 0.08);
 }
 
 .cartao span,
@@ -94,17 +131,17 @@ select {
     width: 100%;
     min-height: 44px;
     padding: 10px;
-    border: 1px solid #aeb9c8;
+    border: 1px solid var(--borda);
     border-radius: 6px;
     background: white;
-    color: #253247;
+    color: var(--texto);
     font: inherit;
 }
 
 input:focus,
 select:focus,
 button:focus-visible {
-    outline: 3px solid #9fc5ff;
+    outline: 3px solid var(--foco);
     outline-offset: 2px;
 }
 
@@ -114,7 +151,7 @@ button {
     padding: 10px 18px;
     border: none;
     border-radius: 6px;
-    background: #2857a4;
+    background: var(--botao);
     color: white;
     font-size: 15px;
     font-weight: bold;
@@ -122,7 +159,19 @@ button {
 }
 
 button:hover {
-    background: #1d427f;
+    background: var(--botao-hover);
+}
+
+.botao-tema {
+    align-self: center;
+    background: white;
+    color: var(--cabecalho);
+    border: 2px solid white;
+}
+
+.botao-tema:hover {
+    background: var(--texto-secundario);
+    color: var(--texto);
 }
 
 .tabela-responsiva {
@@ -139,12 +188,12 @@ table {
 th,
 td {
     padding: 12px;
-    border-bottom: 1px solid #e1e6ed;
+    border-bottom: 1px solid var(--borda-tabela);
     vertical-align: top;
 }
 
 th {
-    background: #f7f9fc;
+    background: var(--tabela-cabecalho);
     font-size: 13px;
 }
 
