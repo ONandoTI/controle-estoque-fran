@@ -16,11 +16,19 @@
                     <p>Sistema de Controle de Estoque</p>
                 </div>
 
-                <button type="button" id="alternar-tema"
-                        class="botao-tema"
-                        aria-label="Alternar tema de cores">
-                    Alterar tema
-                </button>
+                <div class="controles-acessibilidade">
+                    <button type="button" id="alternar-tema"
+                            class="botao-tema"
+                            aria-label="Alternar tema de cores">
+                        Alterar tema
+                    </button>
+
+                    <button type="button" id="alternar-contraste"
+                            class="botao-tema"
+                            aria-pressed="false">
+                        Alto contraste: desligado
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -45,14 +53,32 @@
 
     <script>
         const botaoTema = document.getElementById("alternar-tema");
+        const botaoContraste = document.getElementById("alternar-contraste");
 
         function aplicarTema(tema) {
             document.body.classList.toggle("tema-rosa", tema === "rosa");
             localStorage.setItem("tema-loja-fran", tema);
         }
 
+        function aplicarContraste(ativo) {
+            document.body.classList.toggle("alto-contraste", ativo);
+
+            botaoContraste.setAttribute("aria-pressed", ativo);
+
+            botaoContraste.textContent = ativo
+                ? "Alto contraste: ligado"
+                : "Alto contraste: desligado";
+
+            localStorage.setItem("alto-contraste-loja-fran", ativo);
+        }
+
         const temaSalvo = localStorage.getItem("tema-loja-fran") || "azul";
         aplicarTema(temaSalvo);
+
+        const contrasteSalvo =
+            localStorage.getItem("alto-contraste-loja-fran") === "true";
+
+        aplicarContraste(contrasteSalvo);
 
         botaoTema.addEventListener("click", function () {
             const temaAtual = document.body.classList.contains("tema-rosa")
@@ -60,6 +86,13 @@
                 : "azul";
 
             aplicarTema(temaAtual === "azul" ? "rosa" : "azul");
+        });
+
+        botaoContraste.addEventListener("click", function () {
+            const contrasteAtivo =
+                document.body.classList.contains("alto-contraste");
+
+            aplicarContraste(!contrasteAtivo);
         });
     </script>
 </body>

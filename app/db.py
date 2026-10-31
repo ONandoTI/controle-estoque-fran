@@ -1,6 +1,8 @@
 
 import sqlite3
+
 from pathlib import Path
+from contextlib import contextmanager
 
 DATABASE_PATH = Path(__file__).resolve().parent.parent / "estoque.db"
 
@@ -13,9 +15,19 @@ def conectar():
     return conexao
 
 
+@contextmanager
+def conexao_banco():
+    """Gerencia a transação e fecha a conexão ao final."""
+    conexao = conectar()
+    try:
+        with conexao:
+            yield conexao
+    finally:
+        conexao.close()
+
 def inicializar_banco():
     """Cria as tabelas necessárias caso ainda não existam."""
-    with conectar() as conexao:
+    with conexao_banco() as conexao:
         conexao.execute("""
             CREATE TABLE IF NOT EXISTS produtos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,7 +68,7 @@ def cadastrar_produto(nome, quantidade_inicial, descricao="", estoque_minimo=0):
     if type(estoque_minimo) is not int or estoque_minimo < 0:
         raise ValueError("O estoque mínimo deve ser um inteiro maior ou igual a zero.")
 
-    with conectar() as conexao:
+    with conexao_banco() as conexao:
         cursor = conexao.execute(
             """
             INSERT INTO produtos (nome, descricao, quantidade_atual, estoque_minimo)
@@ -80,7 +92,7 @@ def cadastrar_produto(nome, quantidade_inicial, descricao="", estoque_minimo=0):
 
 def listar_produtos():
     """Retorna os produtos ativos em ordem alfabética."""
-    with conectar() as conexao:
+    with conexao_banco() as conexao:
         return conexao.execute("""
             SELECT id, nome, descricao, quantidade_atual, estoque_minimo, ativo
             FROM produtos
@@ -97,7 +109,7 @@ def registrar_movimentacao(produto_id, tipo, quantidade, observacao=""):
     if type(quantidade) is not int or quantidade <= 0:
         raise ValueError("A quantidade deve ser um inteiro maior que zero.")
 
-    with conectar() as conexao:
+    with conexao_banco() as conexao:
         produto = conexao.execute(
             """
             SELECT id, quantidade_atual
@@ -138,7 +150,7 @@ def registrar_movimentacao(produto_id, tipo, quantidade, observacao=""):
 
 def listar_movimentacoes(produto_id=None):
     """Retorna o histórico de movimentações, opcionalmente por produto."""
-    with conectar() as conexao:
+    with conexao_banco() as conexao:
         consulta = """
             SELECT m.id, m.produto_id, p.nome AS produto_nome,
                    m.tipo, m.quantidade, m.data_hora, m.observacao

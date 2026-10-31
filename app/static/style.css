@@ -265,3 +265,101 @@ footer {
         font-size: 24px;
     }
 }
+
+/* Controles de acessibilidade */
+.controles-acessibilidade {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Modo de alto contraste */
+body.alto-contraste {
+    --fundo: #000000;
+    --texto: #ffffff;
+    --cabecalho: #000000;
+    --texto-secundario: #ffffff;
+    --botao: #ffff00;
+    --botao-hover: #ffffff;
+    --cartao: #000000;
+    --borda: #ffffff;
+    --tabela-cabecalho: #222222;
+    --borda-tabela: #ffffff;
+    --foco: #ffff00;
+}
+
+body.alto-contraste .topo {
+    border-bottom: 3px solid #ffffff;
+}
+
+body.alto-contraste .cartao,
+body.alto-contraste .painel {
+    border: 2px solid #ffffff;
+    box-shadow: none;
+}
+
+body.alto-contraste .cartao span,
+body.alto-contraste footer {
+    color: #ffffff;
+}
+
+body.alto-contraste input,
+body.alto-contraste select {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+body.alto-contraste input::placeholder {
+    color: #dddddd;
+}
+
+body.alto-contraste button:not(.botao-tema) {
+    background: #ffff00;
+    color: #000000;
+    border: 2px solid #ffff00;
+}
+
+body.alto-contraste button:not(.botao-tema):hover {
+    background: #ffffff;
+    border-color: #ffffff;
+}
+
+body.alto-contraste .botao-tema {
+    background: #000000;
+    color: #ffff00;
+    border: 2px solid #ffff00;
+}
+
+body.alto-contraste .botao-tema:hover {
+    background: #333333;
+    color: #ffffff;
+}
+
+body.alto-contraste .status,
+body.alto-contraste .mensagem {
+    border: 2px solid #ffffff;
+}
+
+body.alto-contraste .normal,
+body.alto-contraste .baixo,
+body.alto-contraste .sem-estoque,
+body.alto-contraste .sucesso,
+body.alto-contraste .erro {
+    background: #000000;
+    color: #ffffff;
+}
+
+body.alto-contraste input:focus,
+body.alto-contraste select:focus,
+body.alto-contraste button:focus-visible {
+    outline: 4px solid #ffff00;
+    outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+    .controles-acessibilidade {
+        width: 100%;
+    }
+}

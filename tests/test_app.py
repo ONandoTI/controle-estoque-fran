@@ -1,6 +1,4 @@
 
-import sqlite3
-
 import pytest
 
 from app import criar_app
@@ -26,7 +24,7 @@ def cliente(app_teste):
 
 
 def obter_saldo(produto_id):
-    with db.conectar() as conexao:
+    with db.conexao_banco() as conexao:
         produto = conexao.execute(
             "SELECT quantidade_atual FROM produtos WHERE id = ?",
             (produto_id,),
@@ -36,7 +34,7 @@ def obter_saldo(produto_id):
 
 
 def contar_movimentacoes(produto_id):
-    with db.conectar() as conexao:
+    with db.conexao_banco() as conexao:
         resultado = conexao.execute(
             "SELECT COUNT(*) AS total FROM movimentacoes WHERE produto_id = ?",
             (produto_id,),
@@ -175,3 +173,11 @@ def test_pagina_inicial_exibe_botao_de_alterar_tema(cliente):
     assert resposta.status_code == 200
     assert b"Alterar tema" in resposta.data
     assert b"tema-loja-fran" in resposta.data
+
+def test_pagina_inicial_exibe_botao_de_alto_contraste(cliente):
+    resposta = cliente.get("/")
+
+    assert resposta.status_code == 200
+    assert b"Alto contraste: desligado" in resposta.data
+    assert b"alternar-contraste" in resposta.data
+    assert b"alto-contraste-loja-fran" in resposta.data
