@@ -9,6 +9,7 @@ from app import db
 def app_teste(tmp_path, monkeypatch):
     banco_teste = tmp_path / "estoque_teste.db"
 
+    monkeypatch.setattr(db, "DATABASE_URL", None)
     monkeypatch.setattr(db, "DATABASE_PATH", banco_teste)
 
     app = criar_app()
